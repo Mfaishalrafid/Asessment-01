@@ -1,5 +1,6 @@
 package org.d3if3073.mobpro1.ui.screen
 
+import android.app.LauncherActivity.ListItem
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.unit.dp
 import org.d3if3073.mobpro1.R
@@ -25,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import org.d3if3073.mobpro1.model.Catatan
 import org.d3if3073.mobpro1.ui.theme.Mobpro1Theme
 import org.w3c.dom.Text
 
@@ -92,6 +94,15 @@ fun ScreenContent(modifier: Modifier) {
             .padding(16.dp)
     ) {
 
+    }
+}
+
+@Composable
+fun ListItem(catatan: Catatan) {
+    Column {
+        Text(text = catatan.judul)
+        Text(text = catatan.catatan)
+        Text(text = catatan.tanggal)
     }
 }
 
