@@ -12,6 +12,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -115,7 +116,8 @@ fun ScreenContent(modifier: Modifier) {
     } else {
         LazyColumn(
             modifier = modifier
-                .fillMaxSize()
+                .fillMaxSize(),
+            contentPadding = PaddingValues(bottom = 84.dp)
 
 
         ) {
