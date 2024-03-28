@@ -7,8 +7,10 @@ import org.d3if3073.mobpro1.R
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -27,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -97,6 +101,7 @@ fun MainScreen() {
 fun ScreenContent(modifier: Modifier) {
     val viewModel: MainViewModel = viewModel()
     val data = emptyList<Catatan>()
+    val context = LocalContext.current
     if (data.isEmpty()) {
         Column (
              modifier = modifier
@@ -115,7 +120,10 @@ fun ScreenContent(modifier: Modifier) {
 
         ) {
             items(data) {
-                ListItem(catatan = it)
+                ListItem(catatan = it) {
+                    val pesan = context.getString(R.string.x_diklik, it.judul)
+                    Toast.makeText(context, pesan, Toast.LENGTH_SHORT).show()
+                }
                 Divider()
             }
         }
@@ -126,9 +134,10 @@ fun ScreenContent(modifier: Modifier) {
 
 
 @Composable
-fun ListItem(catatan: Catatan) {
+fun ListItem(catatan: Catatan, onClick: () -> Unit) {
     Column (
         modifier = Modifier
+            .clickable { onClick() }
             .fillMaxWidth()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
