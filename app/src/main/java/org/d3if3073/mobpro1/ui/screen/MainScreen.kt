@@ -24,7 +24,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -94,19 +96,31 @@ fun MainScreen() {
 @Composable
 fun ScreenContent(modifier: Modifier) {
     val viewModel: MainViewModel = viewModel()
-    val data = viewModel.data
-        LazyColumn (
+    val data = emptyList<Catatan>()
+    if (data.isEmpty()) {
+        Column (
+             modifier = modifier
+                 .fillMaxSize()
+                 .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Text(text = stringResource(id = R.string.list_kosong))
+        }
+    } else {
+        LazyColumn(
             modifier = modifier
                 .fillMaxSize()
 
 
         ) {
-            items (data) {
+            items(data) {
                 ListItem(catatan = it)
                 Divider()
             }
         }
     }
+}
 
 
 
@@ -114,7 +128,9 @@ fun ScreenContent(modifier: Modifier) {
 @Composable
 fun ListItem(catatan: Catatan) {
     Column (
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ){
         Text(
