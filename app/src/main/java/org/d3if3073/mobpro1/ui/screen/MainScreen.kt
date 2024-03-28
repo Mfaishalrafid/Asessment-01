@@ -18,8 +18,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -38,6 +42,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.ai.client.generativeai.type.content
 import org.d3if3073.mobpro1.model.Catatan
 import org.d3if3073.mobpro1.screen.MainViewModel
 import org.d3if3073.mobpro1.ui.theme.Mobpro1Theme
@@ -81,6 +86,7 @@ fun ScreenPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
+    val context = LocalContext.current
     Scaffold (
         topBar = {
             TopAppBar(
@@ -92,6 +98,19 @@ fun MainScreen() {
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 )
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    Toast.makeText(context, R.string.tambah_error, Toast.LENGTH_SHORT).show()
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = stringResource(R.string.tambah_catatan),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     ) { padding ->
         ScreenContent(Modifier.padding(padding))
@@ -101,7 +120,7 @@ fun MainScreen() {
 @Composable
 fun ScreenContent(modifier: Modifier) {
     val viewModel: MainViewModel = viewModel()
-    val data = emptyList<Catatan>()
+    val data = viewModel.data
     val context = LocalContext.current
     if (data.isEmpty()) {
         Column (
