@@ -4,5 +4,12 @@
     <string name="x_diklik">%1$s diklik!</string>
     <string name="tambah_catatan">Tambah catatan</string>
     <string name="tambah_error">Belum bisa tambah catatan.</string>
+    <string name="tentang_aplikasi">Tentang Aplikasi</string>
+    <string name="copyright">Aplikasi Haus merupakan sebuah aplikasi android untuk
+    memesan minuman sehingga seseorang dapat memesan minuman dengan mudah. \n \nAplikasi ini dibuat untuk
+    membantu seseorang dengan mudah. \n\nCopyright © 2024 M. Faishal Rafid. \nAll rights
+    reserved.</string>
+    <string name="kembali">Kembali</string>
+    <string name="haus">Haus</string>
 
 </resources>
