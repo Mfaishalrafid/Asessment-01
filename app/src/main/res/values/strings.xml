@@ -11,5 +11,9 @@
     reserved.</string>
     <string name="kembali">Kembali</string>
     <string name="haus">Haus</string>
+    <string name="name">Name</string>
+    <string name="toppingCream">Topping Cream</string>
+    <string name="toppingChocolate">Topping Chocolate</string>
+    <string name="quantity">Quantity</string>
 
 </resources>
