@@ -102,7 +102,9 @@ fun HausScreen(modifier: Modifier) {
             BasicTextField(
                 value = name,
                 onValueChange = { name = it },
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
                 decorationBox = { innerTextField ->
                     if (name.isEmpty()) {
                         Text("Masukan nama anda", fontSize = 16.sp)
@@ -110,7 +112,9 @@ fun HausScreen(modifier: Modifier) {
                     innerTextField()
                 }
             )
-        Row(modifier = Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Checkbox(checked = cream, onCheckedChange = { cream = it })
             Text("Krim")
             Checkbox(checked = chocolate, onCheckedChange = { chocolate = it })
@@ -119,21 +123,22 @@ fun HausScreen(modifier: Modifier) {
         QuantitySelector(
             quantity,
             onQuantityChange = { quantity = it },
-            creamChecked = cream, chocolateChecked = chocolate
+            creamChecked = cream,
+            chocolateChecked = chocolate,
 
         )
 
-        Text(
-            text = number.toString(),
-            style = MaterialTheme.typography.displayLarge,
-            modifier = Modifier.weight(1f).wrapContentSize(Alignment.Center)
-        )
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
-            "HARGA $price",
-            fontSize = 18.sp,
-            modifier = Modifier.padding(16.dp)
-        )
+
+            Text(
+                "HARGA $price",
+                fontSize = 18.sp,
+                modifier = Modifier.padding(16.dp)
+            )
+
+
+
         Button(
             onClick = { /* Handle order placement */ },
             modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -148,6 +153,7 @@ fun HausScreen(modifier: Modifier) {
 @Composable
 fun QuantitySelector(quantity: Int, onQuantityChange: (Int) -> Unit, creamChecked: Boolean, chocolateChecked: Boolean) {
     Row(verticalAlignment = Alignment.CenterVertically) {
+
         Button(onClick = { if ((quantity > 0) && (creamChecked || chocolateChecked)) onQuantityChange(quantity - 1) }, enabled = (creamChecked || chocolateChecked)) {
             Text(" - ")
         }
