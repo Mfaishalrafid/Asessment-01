@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -119,7 +120,15 @@ fun HausScreen(modifier: Modifier) {
             quantity,
             onQuantityChange = { quantity = it },
             creamChecked = cream, chocolateChecked = chocolate
+
         )
+
+        Text(
+            text = number.toString(),
+            style = MaterialTheme.typography.displayLarge,
+            modifier = Modifier.weight(1f).wrapContentSize(Alignment.Center)
+        )
+
         Text(
             "HARGA $price",
             fontSize = 18.sp,
