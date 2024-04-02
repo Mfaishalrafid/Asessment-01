@@ -1,10 +1,6 @@
 package org.d3if3073.mobpro1.ui.screen
 
-import android.content.Context
 import android.content.res.Configuration
-import android.util.Log
-import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -43,7 +38,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.d3if3073.mobpro1.R
 import org.d3if3073.mobpro1.ui.theme.Mobpro1Theme
-import org.w3c.dom.Text
 
 
 @Preview(showBackground = true)
@@ -89,19 +83,11 @@ fun HausScreen(navController: NavHostController) {
 fun HausScreen(modifier: Modifier) {
     var name by remember { mutableStateOf("") }
     var nameError by remember { mutableStateOf(false) }
-
     var kopi by remember { mutableStateOf(false) }
     var jus by remember { mutableStateOf(false) }
-    var coklat by remember { mutableStateOf(false) }
-    var susu by remember { mutableStateOf(false) }
-    var milo by remember { mutableStateOf(false) }
-    var josu by remember { mutableStateOf(false) }
-    var bengbeng by remember { mutableStateOf(false) }
-
     var quantity by remember { mutableStateOf(0) }
-    val price = calculatePrice(kopi, jus,coklat, susu, milo, josu, bengbeng, quantity )
-    var outputtext by remember { mutableStateOf("") }
-
+    val price = calculatePrice(kopi, jus, quantity)
+    var outputText by remember { mutableStateOf("") } // Output text
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -119,76 +105,60 @@ fun HausScreen(modifier: Modifier) {
                 .padding(16.dp),
             decorationBox = { innerTextField ->
                 if (name.isEmpty()) {
-                    Text("Masukkan nama anda", fontSize = 16.sp)
+                    Text("Masukan pilihan minuman anda", fontSize = 18.sp)
                 }
                 innerTextField()
             }
         )
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        )
-            {
-                Checkbox(checked = kopi, onCheckedChange = { kopi = it })
-                Text("Kopi")
-                Checkbox(checked = jus, onCheckedChange = { jus = it })
-                Text("Jus")
-                Checkbox(checked = coklat, onCheckedChange = { jus = it })
-                Text("Coklat")
-                Checkbox(checked = susu, onCheckedChange = { jus = it })
-                Text("Susu")
-                Checkbox(checked = milo, onCheckedChange = { jus = it })
-                Text("Milo")
-                Checkbox(checked = josu, onCheckedChange = { jus = it })
-                Text("Josu")
-                Checkbox(checked = bengbeng, onCheckedChange = { jus = it })
-                Text("Bengbeng")
-            }
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(checked = kopi, onCheckedChange = { kopi = it })
+            Text("Kopi")
+            Checkbox(checked = jus, onCheckedChange = { jus = it })
+            Text("Jus")
+        }
         QuantitySelector(
             quantity,
             onQuantityChange = { quantity = it },
             kopiChecked = kopi,
             jusChecked = jus,
-            coklatChecked = coklat,
-            susuChecked = susu,
-            miloChecked = milo,
-            josuChecked = josu,
-            bengbengChecked = bengbeng,
-
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        Text(
+            "HARGA $price",
+            fontSize = 18.sp,
+            modifier = Modifier.padding(16.dp)
+        )
 
-            Text(
-                "HARGA $price",
-                fontSize = 18.sp,
-                modifier = Modifier.padding(16.dp)
-            )
         Button(
             onClick = {
                 nameError = (name == "" || name == "0")
                 if (nameError) {
-                    outputtext = "Mohon masukkan nama anda dengan benar."
-                } else {
-                    val kopiText = if (kopi) " kopi" else ""
-                    val jusText = if (jus) " jus" else ""
-                    val coklatText = if (coklat) " jus" else ""
-                    val susuText = if (susu) " jus" else ""
-                    val miloText = if (milo) " jus" else ""
-                    val josuText = if (josu) " jus" else ""
-                    val bengbengText = if (bengbeng) " jus" else ""
-                    outputtext = "Pesanan atas nama $name untuk $quantity $kopiText$jusText$coklatText$susuText$miloText$josuText$bengbengText dengan total harga $price telah berhasil!"
+                    outputText = "Mohon masukkan pilihan minuman anda dengan benar."
                 }
-
+                if ((kopi || jus) && quantity == 0) {
+                    outputText = "Mohon pilih jumlah minuman terlebih dahulu."
+                }else {
+                    val kopiText = if (kopi) " Kopi" else ""
+                    val jusText = if (jus) " Jus" else ""
+                    outputText = "Pesanan Anda $name dengan jumlah $quantity $kopiText$jusText telah berhasil!"
+                }
             },
+
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text("PESAN SEKARANG")
         }
+
+
         Text(
-            text = outputtext,
+            text = outputText,
             fontSize = 16.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(16.dp)
@@ -199,19 +169,24 @@ fun HausScreen(modifier: Modifier) {
 
 
     @Composable
-    fun QuantitySelector(quantity: Int, onQuantityChange: (Int) -> Unit, kopiChecked: Boolean, jusChecked: Boolean, coklatChecked: Boolean, susuChecked: Boolean,miloChecked: Boolean,josuChecked: Boolean,bengbengChecked: Boolean,) {
+    fun QuantitySelector(
+        quantity: Int,
+        onQuantityChange: (Int) -> Unit,
+        kopiChecked: Boolean,
+        jusChecked: Boolean
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Button(
-                onClick = { if ((quantity > 0) && (kopiChecked || jusChecked || coklatChecked || susuChecked || miloChecked || josuChecked || bengbengChecked)) onQuantityChange(quantity - 1) },
-                enabled = (kopiChecked || jusChecked || coklatChecked || susuChecked || miloChecked || josuChecked || bengbengChecked),
+                onClick = { if ((quantity > 0) && (kopiChecked || jusChecked )) onQuantityChange(quantity - 1) },
+                enabled = (kopiChecked || jusChecked ),
                 modifier = Modifier.padding(end = 30.dp)
             ) {
                 Text(" - ")
             }
             Text("$quantity", fontSize = 18.sp, modifier = Modifier.widthIn(min = 40.dp))
             Button(
-                onClick = { if (kopiChecked || jusChecked || coklatChecked || susuChecked || miloChecked || josuChecked || bengbengChecked) onQuantityChange(quantity + 1) },
-                enabled = (kopiChecked || jusChecked || coklatChecked || susuChecked || miloChecked || josuChecked || bengbengChecked)
+                onClick = { if (kopiChecked || jusChecked ) onQuantityChange(quantity + 1) },
+                enabled = (kopiChecked || jusChecked )
             ) {
                 Text(" + ")
             }
@@ -219,23 +194,17 @@ fun HausScreen(modifier: Modifier) {
     }
 
 
-fun calculatePrice(kopi: Boolean, jus: Boolean, coklat: Boolean, susu: Boolean, milo: Boolean, josu: Boolean, bengbeng: Boolean, quantity: Int): Int {
-    val kopiPrice = 1000
-    val jusPrice = 1500
-    val coklatPrice = 1600
-    val susuPrice = 1700
-    val miloPrice = 1800
-    val josuPrice = 1900
-    val bengbengPrice = 2000
+fun calculatePrice(kopi: Boolean, jus: Boolean, quantity: Int): Int {
+    val kopiPrice = 20000
+    val jusPrice = 15000
+    val kopiJusPrice = kopiPrice + jusPrice
+
 
     val additionalPrice = when {
+        kopi && jus -> kopiJusPrice
         kopi -> kopiPrice
         jus -> jusPrice
-        coklat -> coklatPrice
-        susu -> susuPrice
-        milo -> miloPrice
-        josu -> josuPrice
-        bengbeng -> bengbengPrice
+
         else -> 0
     }
 
