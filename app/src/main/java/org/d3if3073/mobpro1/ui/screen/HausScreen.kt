@@ -2,7 +2,9 @@ package org.d3if3073.mobpro1.ui.screen
 
 import android.content.Context
 import android.content.res.Configuration
+import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,7 +43,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.d3if3073.mobpro1.R
 import org.d3if3073.mobpro1.ui.theme.Mobpro1Theme
-
+import org.w3c.dom.Text
 
 
 @Preview(showBackground = true)
@@ -85,46 +88,73 @@ fun HausScreen(navController: NavHostController) {
 @Composable
 fun HausScreen(modifier: Modifier) {
     var name by remember { mutableStateOf("") }
-    var cream by remember { mutableStateOf(false) }
-    var chocolate by remember { mutableStateOf(false) }
+    var nameError by remember { mutableStateOf(false) }
+
+    var kopi by remember { mutableStateOf(false) }
+    var jus by remember { mutableStateOf(false) }
+    var coklat by remember { mutableStateOf(false) }
+    var susu by remember { mutableStateOf(false) }
+    var milo by remember { mutableStateOf(false) }
+    var josu by remember { mutableStateOf(false) }
+    var bengbeng by remember { mutableStateOf(false) }
+
     var quantity by remember { mutableStateOf(0) }
-    val price = calculatePrice(cream, chocolate, quantity)
+    val price = calculatePrice(kopi, jus,coklat, susu, milo, josu, bengbeng, quantity )
+    var outputtext by remember { mutableStateOf("") }
+
 
     Column(
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-            TopAppBar(
-                title = { Text("Pesan Kopi") }
-            )
-            Spacer(
-                modifier = Modifier.height(16.dp)
-            )
-            BasicTextField(
-                value = name,
-                onValueChange = { name = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                decorationBox = { innerTextField ->
-                    if (name.isEmpty()) {
-                        Text("Masukan nama anda", fontSize = 16.sp)
-                    }
-                    innerTextField()
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        TopAppBar(
+            title = { Text("Pesan Kopi") }
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        BasicTextField(
+            value = name,
+            onValueChange = { name = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            decorationBox = { innerTextField ->
+                if (name.isEmpty()) {
+                    Text("Masukkan nama anda", fontSize = 16.sp)
                 }
-            )
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(checked = cream, onCheckedChange = { cream = it })
-            Text("Krim")
-            Checkbox(checked = chocolate, onCheckedChange = { chocolate = it })
-            Text("Coklat")
-        }
+                innerTextField()
+            }
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
+            {
+                Checkbox(checked = kopi, onCheckedChange = { kopi = it })
+                Text("Kopi")
+                Checkbox(checked = jus, onCheckedChange = { jus = it })
+                Text("Jus")
+                Checkbox(checked = coklat, onCheckedChange = { jus = it })
+                Text("Coklat")
+                Checkbox(checked = susu, onCheckedChange = { jus = it })
+                Text("Susu")
+                Checkbox(checked = milo, onCheckedChange = { jus = it })
+                Text("Milo")
+                Checkbox(checked = josu, onCheckedChange = { jus = it })
+                Text("Josu")
+                Checkbox(checked = bengbeng, onCheckedChange = { jus = it })
+                Text("Bengbeng")
+            }
         QuantitySelector(
             quantity,
             onQuantityChange = { quantity = it },
-            creamChecked = cream,
-            chocolateChecked = chocolate,
+            kopiChecked = kopi,
+            jusChecked = jus,
+            coklatChecked = coklat,
+            susuChecked = susu,
+            miloChecked = milo,
+            josuChecked = josu,
+            bengbengChecked = bengbeng,
 
         )
 
@@ -136,40 +166,78 @@ fun HausScreen(modifier: Modifier) {
                 fontSize = 18.sp,
                 modifier = Modifier.padding(16.dp)
             )
-
-
-
         Button(
-            onClick = { /* Handle order placement */ },
+            onClick = {
+                nameError = (name == "" || name == "0")
+                if (nameError) {
+                    outputtext = "Mohon masukkan nama anda dengan benar."
+                } else {
+                    val kopiText = if (kopi) " kopi" else ""
+                    val jusText = if (jus) " jus" else ""
+                    val coklatText = if (coklat) " jus" else ""
+                    val susuText = if (susu) " jus" else ""
+                    val miloText = if (milo) " jus" else ""
+                    val josuText = if (josu) " jus" else ""
+                    val bengbengText = if (bengbeng) " jus" else ""
+                    outputtext = "Pesanan atas nama $name untuk $quantity $kopiText$jusText$coklatText$susuText$miloText$josuText$bengbengText dengan total harga $price telah berhasil!"
+                }
+
+            },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text("PESAN SEKARANG")
         }
+        Text(
+            text = outputtext,
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(16.dp)
+        )
     }
 }
 
 
 
-@Composable
-fun QuantitySelector(quantity: Int, onQuantityChange: (Int) -> Unit, creamChecked: Boolean, chocolateChecked: Boolean) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-
-        Button(onClick = { if ((quantity > 0) && (creamChecked || chocolateChecked)) onQuantityChange(quantity - 1) }, enabled = (creamChecked || chocolateChecked)) {
-            Text(" - ")
-        }
-        Text("$quantity", fontSize = 18.sp, modifier = Modifier.widthIn(min = 40.dp))
-        Button(onClick = { if (creamChecked || chocolateChecked) onQuantityChange(quantity + 1) }, enabled = (creamChecked || chocolateChecked)) {
-            Text(" + ")
+    @Composable
+    fun QuantitySelector(quantity: Int, onQuantityChange: (Int) -> Unit, kopiChecked: Boolean, jusChecked: Boolean, coklatChecked: Boolean, susuChecked: Boolean,miloChecked: Boolean,josuChecked: Boolean,bengbengChecked: Boolean,) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Button(
+                onClick = { if ((quantity > 0) && (kopiChecked || jusChecked || coklatChecked || susuChecked || miloChecked || josuChecked || bengbengChecked)) onQuantityChange(quantity - 1) },
+                enabled = (kopiChecked || jusChecked || coklatChecked || susuChecked || miloChecked || josuChecked || bengbengChecked),
+                modifier = Modifier.padding(end = 30.dp)
+            ) {
+                Text(" - ")
+            }
+            Text("$quantity", fontSize = 18.sp, modifier = Modifier.widthIn(min = 40.dp))
+            Button(
+                onClick = { if (kopiChecked || jusChecked || coklatChecked || susuChecked || miloChecked || josuChecked || bengbengChecked) onQuantityChange(quantity + 1) },
+                enabled = (kopiChecked || jusChecked || coklatChecked || susuChecked || miloChecked || josuChecked || bengbengChecked)
+            ) {
+                Text(" + ")
+            }
         }
     }
-}
 
 
-fun calculatePrice(cream: Boolean, chocolate: Boolean, quantity: Int): Int {
-    val creamPrice = 1000
-    val chocolatePrice = 1500
+fun calculatePrice(kopi: Boolean, jus: Boolean, coklat: Boolean, susu: Boolean, milo: Boolean, josu: Boolean, bengbeng: Boolean, quantity: Int): Int {
+    val kopiPrice = 1000
+    val jusPrice = 1500
+    val coklatPrice = 1600
+    val susuPrice = 1700
+    val miloPrice = 1800
+    val josuPrice = 1900
+    val bengbengPrice = 2000
 
-    val additionalPrice = if (cream) creamPrice else if (chocolate) chocolatePrice else 0
+    val additionalPrice = when {
+        kopi -> kopiPrice
+        jus -> jusPrice
+        coklat -> coklatPrice
+        susu -> susuPrice
+        milo -> miloPrice
+        josu -> josuPrice
+        bengbeng -> bengbengPrice
+        else -> 0
+    }
 
     return (quantity * additionalPrice)
 }
