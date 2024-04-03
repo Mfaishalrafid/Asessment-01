@@ -131,24 +131,27 @@ fun HausScreen(modifier: Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            "HARGA $price",
+            "HARGA Rp.$price",
             fontSize = 18.sp,
             modifier = Modifier.padding(16.dp)
         )
 
         Button(
             onClick = {
-                nameError = (name == "" || name == "0")
-                if (nameError) {
-                    outputText = "Mohon masukkan pilihan minuman anda dengan benar."
-                }
-                if ((kopi || jus) && quantity == 0) {
+                    if ((kopi || jus) && quantity == 0) {
                     outputText = "Mohon pilih jumlah minuman terlebih dahulu."
                 }else {
-                    val kopiText = if (kopi) " Kopi" else ""
-                    val jusText = if (jus) " Jus" else ""
-                    outputText = "Pesanan Anda $name dengan jumlah $quantity $kopiText$jusText telah berhasil!"
+                    nameError = (name == "" || name == "0")
+                    if (nameError) {
+                        outputText = "Mohon masukkan pilihan minuman anda dengan benar."
+                    } else {
+                        val kopiText = if (kopi) " Kopi" else ""
+                        val jusText = if (jus) " Jus" else ""
+                        outputText =
+                            "Pesanan Anda $name dengan jumlah $quantity $kopiText$jusText seharga Rp.$price telah berhasil!"
+                    }
                 }
+
             },
 
             modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -180,7 +183,7 @@ fun HausScreen(modifier: Modifier) {
                 onClick = { if ((quantity > 0) && (kopiChecked || jusChecked )) onQuantityChange(quantity - 1) },
                 enabled = (kopiChecked || jusChecked ),
                 modifier = Modifier.padding(end = 30.dp)
-            ) {
+                ) {
                 Text(" - ")
             }
             Text("$quantity", fontSize = 18.sp, modifier = Modifier.widthIn(min = 40.dp))

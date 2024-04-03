@@ -1,5 +1,6 @@
 package org.d3if3073.mobpro1.screen
 
+
 import androidx.lifecycle.ViewModel
 import org.d3if3073.mobpro1.model.Catatan
 
@@ -19,4 +20,8 @@ class MainViewModel : ViewModel() {
         }
         return data
     }
-}
+
+
+    }
+
+
