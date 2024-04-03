@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -151,11 +152,16 @@ fun ScreenContent(modifier: Modifier) {
 
 
         ) {
-            items(data) {
-                ListItem(catatan = it) {
-                    val pesan = context.getString(R.string.x_diklik, it.judul)
-                    Toast.makeText(context, pesan, Toast.LENGTH_SHORT).show()
-                }
+            items(data) { catatan ->
+                ListItem(
+                    catatan = catatan,
+                    onClick = {
+                        val pesan = context.getString(R.string.x_diklik, catatan.judul)
+                        Toast.makeText(context, pesan, Toast.LENGTH_SHORT).show()
+                    },
+                    onDelete = { /* Tambahkan logika penghapusan di sini */ },
+                    rekomendasi = null
+                )
                 Divider()
             }
         }
@@ -166,7 +172,7 @@ fun ScreenContent(modifier: Modifier) {
 
 
 @Composable
-fun ListItem(catatan: Catatan, onClick: () -> Unit) {
+fun ListItem(catatan: Catatan, onClick: () -> Unit, onDelete: () -> Unit, rekomendasi: String?) {
     Column (
         modifier = Modifier
             .clickable { onClick() }
@@ -186,6 +192,18 @@ fun ListItem(catatan: Catatan, onClick: () -> Unit) {
             overflow = TextOverflow.Ellipsis
         )
         Text(text = catatan.tanggal)
+        rekomendasi?.let {
+            Text(
+                text = it,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        IconButton(
+            onClick = { onDelete() },
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Icon(Icons.Filled.Delete, contentDescription = "Delete")
+        }
     }
 }
 

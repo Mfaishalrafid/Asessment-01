@@ -140,7 +140,7 @@ fun HausScreen(modifier: Modifier) {
             onClick = {
                     if ((kopi || jus) && quantity == 0) {
                     outputText = "Mohon pilih jumlah minuman terlebih dahulu."
-                }else {
+                    }else {
                     nameError = (name == "" || name == "0")
                     if (nameError) {
                         outputText = "Mohon masukkan pilihan minuman anda dengan benar."
