@@ -1,5 +1,7 @@
 package org.d3if3073.mobpro1.ui.screen
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import org.d3if3073.mobpro1.R
 
@@ -7,6 +9,7 @@ import org.d3if3073.mobpro1.R
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Message
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -90,6 +93,7 @@ fun ScreenPreview() {
 @Composable
 fun MainScreen(navController: NavHostController) {
     val context = LocalContext.current
+
     Scaffold (
         topBar = {
             TopAppBar(
@@ -159,8 +163,7 @@ fun ScreenContent(modifier: Modifier) {
                         val pesan = context.getString(R.string.x_diklik, catatan.judul)
                         Toast.makeText(context, pesan, Toast.LENGTH_SHORT).show()
                     },
-                    onDelete = { /* Tambahkan logika penghapusan di sini */ },
-                    rekomendasi = null
+
                 )
                 Divider()
             }
@@ -172,7 +175,7 @@ fun ScreenContent(modifier: Modifier) {
 
 
 @Composable
-fun ListItem(catatan: Catatan, onClick: () -> Unit, onDelete: () -> Unit, rekomendasi: String?) {
+fun ListItem(catatan: Catatan, onClick: () -> Unit) {
     Column (
         modifier = Modifier
             .clickable { onClick() }
@@ -192,18 +195,7 @@ fun ListItem(catatan: Catatan, onClick: () -> Unit, onDelete: () -> Unit, rekome
             overflow = TextOverflow.Ellipsis
         )
         Text(text = catatan.tanggal)
-        rekomendasi?.let {
-            Text(
-                text = it,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        IconButton(
-            onClick = { onDelete() },
-            modifier = Modifier.align(Alignment.End)
-        ) {
-            Icon(Icons.Filled.Delete, contentDescription = "Delete")
-        }
     }
 }
+
 

@@ -1,7 +1,11 @@
 package org.d3if3073.mobpro1.ui.screen
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,11 +28,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -78,6 +85,7 @@ fun HausScreen(navController: NavHostController) {
     }
 }
 
+@SuppressLint("StringFormatInvalid", "StringFormatMatches")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HausScreen(modifier: Modifier) {
@@ -88,6 +96,7 @@ fun HausScreen(modifier: Modifier) {
     var quantity by remember { mutableStateOf(0) }
     val price = calculatePrice(kopi, jus, quantity)
     var outputText by remember { mutableStateOf("") } // Output text
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -166,6 +175,21 @@ fun HausScreen(modifier: Modifier) {
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(16.dp)
         )
+        Button(
+            onClick = {
+                 shareData(
+                    context = context,
+                    message = context.getString(
+                        R.string.bagikan_template,
+                        name, kopi, jus, quantity, price
+                    )
+                )
+            },
+            modifier = Modifier.padding(top = 8.dp),
+            contentPadding = PaddingValues(horizontal=32.dp, vertical=16.dp)
+        ) {
+            Text(text = stringResource(id = R.string.bagikan))
+        }
     }
 }
 
@@ -214,3 +238,12 @@ fun calculatePrice(kopi: Boolean, jus: Boolean, quantity: Int): Int {
     return (quantity * additionalPrice)
 }
 
+private fun shareData(context: Context, message: String) {
+    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT, message)
+    }
+    if (shareIntent.resolveActivity(context.packageManager) != null) {
+        context.startActivity(shareIntent)
+    }
+}

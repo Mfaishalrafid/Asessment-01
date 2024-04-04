@@ -21,6 +21,10 @@
     <string name="bengbeng">Bengbeng</string>
     <string name="quantity">Quantity</string>
     <string name="price">Price</string>
+    <string name="kategori">Kategori</string>
     <string name="outputtext">OutputText</string>
+    <string name="bagikan">Bagikan</string>
+    <string name="bagikan_template">Nama Minuman: %1\$s Jenis Minuman: %2\$s
+    Jumlah Minuman: %3\$s Harga Minuman: Rp.%4\$s</string>
 
 </resources>

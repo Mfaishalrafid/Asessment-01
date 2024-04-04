@@ -1,13 +1,16 @@
 package org.d3if3073.mobpro1.screen
 
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import org.d3if3073.mobpro1.model.Catatan
 
 class MainViewModel : ViewModel() {
     val data = getDataDummy ()
+
     private fun getDataDummy (): List<Catatan> {
         val data = mutableListOf<Catatan>()
+
         for (i in 29 downTo 20) {
             data. add (
                 Catatan(
@@ -20,6 +23,7 @@ class MainViewModel : ViewModel() {
         }
         return data
     }
+
 
 
     }
